@@ -8,11 +8,20 @@ import Col from 'react-bootstrap/Col'
 import './App.css';
 import Reminder from './Components/Reminder'
 import data from './data'
-import Badge from 'react-bootstrap/Badge'
-// import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
-const [tasks, setTasks] = useState(data)
+
+const [list, setList] = useState(data);
+const [name, setName] = useState('');
+const [priority, setPriority] = useState('medium');
+
+function handleAdd() {
+    const newList = list.concat({ name, priority, id: uuidv4() });
+    setList(newList);
+}
+
   return (
     <>
       <Container>
@@ -23,11 +32,25 @@ const [tasks, setTasks] = useState(data)
               <Card.Body>
                 <Card.Title> Reminders for Today</Card.Title>
                 <hr/>
+                <Form>
+                  <Row className="mb-4">
+                    <Col s="auto">
+                      <Form.Control type="text" placeholder="add a task" onChange={(event) => setName(event.target.value)} />
+                    </Col>
+                    <Col s="auto">
+                    <Form.Control type="text" placeholder="task priority" value={priority}  onChange={(event) => setPriority(event.target.value)} />
+                    </Col>
+                    <Col xs="auto">
+                    <Button variant="primary" onClick={handleAdd}>Add Task</Button>
+                    </Col>
+                  </Row>
+                </Form>
+                    
                 <Card.Text>
-                <Reminder tasks={tasks}/>
+                <Reminder tasks={list}/>
                 </Card.Text>
               </Card.Body>
-              <Button variant="outline-light" className='mb-4' onClick={()=> setTasks([])}>Clear Tasks</Button>
+              <Button variant="outline-light" className='mb-4' onClick={()=> setList([])}>Clear Tasks</Button>
             </Card>
         </Col>
         <Col></Col>
